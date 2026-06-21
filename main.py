@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LinearRegression
 
 datos = pd.read_csv("insurance.csv")
@@ -26,25 +27,33 @@ print(X.head())
 print("--- VARIABLE BUSCADA (y) ---")
 print(y.head())
 
-# --- ENTRENAMIENTO DE MODELO ---
+# --- ENTRENAMIENTO DE MODELO MEDIANTE ÚNICA DIVISIÓN ---
 # Partir los datos para entrenar, no memorizar
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, train_size=0.8)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, train_size=0.8, random_state=40)
 
 # Modelo es el objeto vacío
 modelo = LinearRegression()
 # Entrenamiento del modelo
 modelo.fit(X_train, y_train)
 
-print("--- LO QUE HA APRENDIDO EL MODELO ---")
-print(f"Por cada año de Edad, el precio sube: {modelo.coef_[0]} dólares")
-print(f"Por cada punto de BMI, el precio sube: {modelo.coef_[1]} dólares")
-print(f"Si la persona es Fumadora, el precio sube: {modelo.coef_[2]} dólares")
+
+# --- ENTRENAMIENTO DE MODELO MEDIANTE VARIAS DIVISIONES ---
+modelo2 = LinearRegression()
+medias = cross_val_score(modelo2, X, y, cv=10)
+#print("Las notas medias son: " + str(medias) + "\n")
+
+# Entreno el segundo modelo con todos los datos, porque ya hemos hecho el examen previo con la Cross Validation
+modelo2.fit(X, y)
+
 
 # --- Evaluación del modelo y predicción con el 20% restante ---
 
 # Primero medimos la precisión con el R^2 score
 precision = modelo.score(X_test, y_test)
 print("La precisión (R² Score) es de un " + str(precision*100) + "%")
+
+# Precisión de varias
+print("Mediante la función con cortes (Cross Validation), la precisión resultante es de un: " + str(medias.mean()*100) + "%\n")
 
 # Hacemos una predicción con un paciente nuevo
 p_nuevo = pd.DataFrame([[30, 22.3, 0]], columns=['age', 'bmi', 'smoker'])
@@ -54,5 +63,10 @@ p_nuevo['riesgo_extremo'] = p_nuevo['bmi'] * p_nuevo['smoker']
 # Nos aeguramos de que sigue el mismo orden
 p_nuevo = p_nuevo[['age', 'age2', 'bmi', 'smoker', 'riesgo_extremo']]
 
-precio_estimado = modelo.predict(p_nuevo)
-print("El precio estimado que predice el modelo para el paciente nuevo es de:" + str(precio_estimado) + "$")
+print("--- PRECIO PREDECIDO MEDIANTE ÚNICA DIVISIÓN ---")
+precio_estimado1 = modelo.predict(p_nuevo)
+print("El precio estimado que predice el modelo para el paciente nuevo con el primer modelo es de:" + str(precio_estimado1) + "$\n")
+
+print("--- PRECIO PREDECIDO MEDIANTE VARIAS DIVISIONES ---")
+precio_estimado2 = modelo2.predict(p_nuevo)
+print("El precio estimado que predice el modelo para el paciente nuevo con el segundo modelo es de:" + str(precio_estimado2) + "$")
