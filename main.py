@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LinearRegression
+import joblib
 
 datos = pd.read_csv("insurance.csv")
 
@@ -70,3 +71,7 @@ print("El precio estimado que predice el modelo para el paciente nuevo con el pr
 print("--- PRECIO PREDECIDO MEDIANTE VARIAS DIVISIONES ---")
 precio_estimado2 = modelo2.predict(p_nuevo)
 print("El precio estimado que predice el modelo para el paciente nuevo con el segundo modelo es de:" + str(precio_estimado2) + "$")
+
+
+joblib.dump(modelo2, 'modelo_seguros.pkl')
+print("\n¡Modelo guardado exitosamente como 'modelo_seguros.pkl'.")

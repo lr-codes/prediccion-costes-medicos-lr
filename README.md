@@ -11,7 +11,7 @@ Este proyecto implementa un modelo de **Regresión Lineal Múltiple** desde cero
 ## Resultados del Modelo
 * **Precisión (R² Score):** **~83.92%** de la variabilidad de los costes médicos explicada con éxito (una mejora notable frente al 75% del modelo base sin ingeniería de variables).
 * **Precisión (Cross-Validation):** **~83.43%**. En este caso más fiable y robusta y menos influenciado por la "suerte" de la división.
-* **Conclusión Clave:** El modelo determinó que el factor de mayor peso financiero es la edad, seguido por el tabaquismo. Esto se debe a la evolución cuadrática que posee la edad, frente a la lineal del tabaquismo. En el modelo original el mayor factor con un gran margen de diferencia era el tabaquismo. 
+* **Conclusión Clave:** El modelo determinó que el factor de mayor peso financiero es el tabaquismo. Esto se debe a la evolución cuadrática que posee la edad, frente a la lineal del tabaquismo. En el modelo original el mayor factor con un gran margen de diferencia era el tabaquismo. Sin embargo en la última versión no se puede asegurar por lo que se explica en la observación, ya que no se puede ver como afecta individualmente de manera directa.
 
 ## Observaciones
 * Debido a la creación de variables cruzadas como ha sido `riesgo_extremo` ya los coeficientes no son fiables para ver cada uno individualmente. Esto oculta el balance que se hacen entre ellos pues las predicciones son válidas y correctas.
